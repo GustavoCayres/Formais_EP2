@@ -19,26 +19,30 @@ def set_union(X, Y):
 
 #nao utiliza simbolos como no enunciado, devera ser consertado logo
 def pre_imagem_fraca(S, transitions, X):
-    index_of_states_in_X = []
     pre_imagem_fraca = []
-    for state in X:
-        index_of_states_in_X.append(S.index(state))
-    for arrow in transitions if arrow[1] in index_of_states_in_X:
-        pre_imagem_fraca.append(S[arrow[0]])
+    for arrow in transitions if arrow[1] in X:
+        pre_imagem_fraca.append(arrow[0])
     return pre_imagem_fraca    
     
 def pre_imagem_forte(S, transitions, X):
-    return set_subtraction(S, pre_imagem_fraca(S, transitions, set_subtraction(S, X)))
+    return set_subtraction(range(S), pre_imagem_fraca(S, transitions, set_subtraction(S, X)))
 
 def SAT(S, transitions, formula):
     if formula.kind == "1":
-        return S
+        return range(S)
     if formula.kind == "0":
         return []
     if formula.kind[0] == "x":
-        #TODO
+        sat_states = []
+        for i in range(S):
+            if (states[i].restrict({x[int(formula.kind.strip("x"))]:0}) == 0):
+                sat_states.append(i)
+        return sat_states
+        #variavel global states sera usada exclusivamente aqui
+        #e nunca sera modificada (fora a sua inicializacao)
+        #por isso a opcao de usa-la globalmente
     if formula.kind == "-":
-        return set_subtraction(S, SAT(S, transitions, formula.childs[0]))
+        return set_subtraction(range(S), SAT(S, transitions, formula.childs[0]))
     if formula.kind == "*":
         return set_intersection(SAT(S, transitions, formula.childs[0]), SAT(S, transitions, formula.childs[1]))
     if formula.kind == "+":
@@ -66,7 +70,7 @@ def SAT_EX(S, transitions, formula):
     return Y
                      
 def SAT_AF(S, transitions, formula):
-    X = S
+    X = range(S)
     Y = SAT(S, transitions, formula)
     while X != Y:
         X = Y
@@ -75,7 +79,7 @@ def SAT_AF(S, transitions, formula):
 
 def SAT_EU(S, transitions, formula1, formula2):
     W = SAT(S, transitions, formula1)
-    X = S
+    X = range(S)
     Y = SAT(S, transitions, formula2)
     while X != Y:
         X = Y
@@ -84,8 +88,14 @@ def SAT_EU(S, transitions, formula1, formula2):
 
 S = int(sys.stdin.readline())
 transitions = eval(sys.stdin.readline())
-states = eval(sys.stdin.readline())
+global states = eval(sys.stdin.readline())
+#nao esta pronto! cada elemento deve ser um BDD
 formula = CTLtree(sys.stdin.readline())
 k = int(sys.stdin.readline())
 
-
+solution = SAT(S, transitions, formula)
+print("Estados que satisfazem a formula: ", solution)
+if k in solution:
+    print("O estado de interesse satisfaz a formula!")
+else:
+    print("O estado de interesse NAO satisfaz a formula!")
