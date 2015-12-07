@@ -6,6 +6,7 @@
 
 from pyeda.inter import *
 import sys
+from parser import CTLtree
 
 def set_subtraction(X, Y):
     return [item for item in X if item not in Y]
@@ -81,4 +82,10 @@ def SAT_EU(S, transitions, formula1, formula2):
         Y = set_union(Y, set_intersection(W, pre_imagem_fraca(S, transitions, Y))) 
     return Y   
 
-# ~ ^
+S = int(sys.stdin.readline())
+transitions = eval(sys.stdin.readline())
+states = eval(sys.stdin.readline())
+formula = CTLtree(sys.stdin.readline())
+k = int(sys.stdin.readline())
+
+
