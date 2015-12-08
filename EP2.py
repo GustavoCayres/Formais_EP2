@@ -12,10 +12,10 @@ def set_subtraction(X, Y):
     return [item for item in X if item not in Y]
 
 def set_intersection(X, Y):
-    return list(set(a) & set(b))
+    return list(set(X) & set(Y))
 
 def set_union(X, Y):
-    return list(set(a) | set(b))
+    return list(set(X) | set(Y))
 
 #nao utiliza simbolos como no enunciado, devera ser consertado logo
 def pre_imagem_fraca(S, transitions, X):
