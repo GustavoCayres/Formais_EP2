@@ -79,9 +79,9 @@ class CTLtree():
 #Função exemplo de teste para a classe CTLtree
 def test():
         print("Testando parser CTL:")
-        print("Arvore CTL para a expressão:-x1     " + str(CTLtree("EU(x2)(x1)")))
-        print("Arvore CTL para a expressão:AX1     " + str(CTLtree("AX1")))
-        print("Arvore CTL para a expressão:+(AX EG x1)( - +(x1)(AG x2) )     " + str(CTLtree("+(AX EG x1)( - +(x1)(AG x2) )")))
-
+        print("Arvore CTL para a expressão -x1:     " + str(CTLtree("-x1")))
+        print("Arvore CTL para a expressão AX1:     " + str(CTLtree("AX1")))
+        print("Arvore CTL para a expressão +(AX EG x1)( - +(x1)(AG x2) ):     " + str(CTLtree("+(AX EG x1)( - +(x1)(AG x2) )")))
+        print("Arvore CTL para a expressão EU(x1)(x2):     " + str(CTLtree("EU(x1)(x2)")))
 if __name__=='__main__':
         test()
