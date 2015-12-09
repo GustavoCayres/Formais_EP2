@@ -89,10 +89,10 @@ def SAT_EU(S, transitions, formula1, formula2):
 S = range(int(sys.stdin.readline()))
 transitions = eval(sys.stdin.readline())
 global states
-states = eval(sys.stdin.readline())
+states = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
 #nao esta pronto! cada elemento deve ser um BDD
 formula = CTLtree(sys.stdin.readline())
-k = int(sys.stdin.readline())
+k = states.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
 
 solution = SAT(S, transitions, formula)
 print("Estados que satisfazem a formula: ", solution)
