@@ -17,13 +17,12 @@ def set_intersection(X, Y):
 def set_union(X, Y):
     return list(set(X) | set(Y))
 
-#nao utiliza simbolos como no enunciado, devera ser consertado logo
 def pre_imagem_fraca(S, transitions, X):
     pre_imagem_fraca = []
     for arrow in transitions:
         if arrow[1] in X:
             pre_imagem_fraca.append(arrow[0])
-    return pre_imagem_fraca    
+    return pre_imagem_fraca
     
 def pre_imagem_forte(S, transitions, X):
     return set_subtraction(S, pre_imagem_fraca(S, transitions, set_subtraction(S, X)))
@@ -90,7 +89,6 @@ S = range(int(sys.stdin.readline()))
 transitions = eval(sys.stdin.readline())
 global states
 states = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
-#nao esta pronto! cada elemento deve ser um BDD
 formula = CTLtree(sys.stdin.readline())
 k = states.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
 
