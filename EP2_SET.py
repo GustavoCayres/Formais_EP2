@@ -23,7 +23,7 @@ def pre_imagem_fraca(S, transitions, X):
         if arrow[1] in X:
             pre_imagem_fraca.append(arrow[0])
     return set(pre_imagem_fraca)
-    
+
 def pre_imagem_forte(S, transitions, X):
     return set_subtraction(S, pre_imagem_fraca(S, transitions, set_subtraction(S, X)))
 
@@ -50,10 +50,10 @@ def SAT(S, transitions, formula):
         return SAT_AF(S, transitions, formula.childs[0])
     if formula.kind == "EU":
         return SAT_EU(S, transitions, formula.childs[0], formula.childs[1])
-    if formula.kind == "AX":    
+    if formula.kind == "AX":
         return SAT(S, transitions, CTLtree("- EX - " + str(formula.childs[0])))
-    if formula.kind == "EF":    
-        return SAT(S, transitions, CTLtree("EU(1)(" + str(formula.childs[0]) + ")")) 
+    if formula.kind == "EF":
+        return SAT(S, transitions, CTLtree("EU(1)(" + str(formula.childs[0]) + ")"))
     if formula.kind == "AU":
         f1 = str(formula.childs[0])
         f2 = str(formula.childs[1])
@@ -62,12 +62,12 @@ def SAT(S, transitions, formula):
         return SAT(S, transitions, CTLtree("- EU(1)(- " + str(formula.childs[0]) + ")"))
     if formula.kind == "EG":
         return SAT(S, transitions, CTLtree("- AF - " + str(formula.childs[0])))
-   
+
 def SAT_EX(S, transitions, formula):
     X = SAT(S, transitions, formula)
     Y = pre_imagem_fraca(S, transitions, X)
     return Y
-                     
+
 def SAT_AF(S, transitions, formula):
     X = S
     Y = SAT(S, transitions, formula)
@@ -82,8 +82,8 @@ def SAT_EU(S, transitions, formula1, formula2):
     Y = SAT(S, transitions, formula2)
     while X != Y:
         X = Y
-        Y = set_union(Y, set_intersection(W, pre_imagem_fraca(S, transitions, Y))) 
-    return Y   
+        Y = set_union(Y, set_intersection(W, pre_imagem_fraca(S, transitions, Y)))
+    return Y
 
 S = range(int(sys.stdin.readline()))
 transitions = eval(sys.stdin.readline())
