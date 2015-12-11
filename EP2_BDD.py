@@ -7,18 +7,15 @@
 from pyeda.inter import *
 import sys
 from parser import CTLtree
-"""
+
 def pre_imagem_fraca(X):    
-    future_X = 0
-    for i in X:
-        future_X = future_X 
-    solution = future_X & transitions
+    Y = expr2bdd(expr(str(bdd2expr(X)).replace("x", "y")))
+    solution = Y & transitions
     variables = transitions.inputs
-    for variable in variables if str(variables)[0] != x:
+    for variable in variables if str(variables)[0] == y:
         solution = solution.restrict({variable:1}) | solution.restrict({variable:0})
-        
-    
-    """
+    return solution
+
 def pre_imagem_forte(X):
     return S & ~(pre_imagem_fraca(S & ~X))
 
