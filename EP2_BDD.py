@@ -74,7 +74,7 @@ def SAT_EU(formula1, formula2):
     return Y
 
 sys.stdin.readline()
-transitions = eval(sys.stdin.readline())
+arrows = eval(sys.stdin.readline())
 
 state_variables = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
 variable_indexes = []
@@ -86,21 +86,33 @@ variable_indexes = set(variable_indexes)
 formula = CTLtree(sys.stdin.readline())
 k = state_variables.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
 x = bddvars(x, len(variable_indexes))
+y = bddvars(y, len(variable_indexes)) # x'
+S = 0
 for i in range(len(state_variables)):
     state = 1
     for index in variable_indexes:
-        if "x"+i in state_variables[i]:
-            state = state & eval("x"+i)
+        if "x"+index in state_variables[i]:
+            state = state & eval("x"+index)
         else:
-            state = state & eval("-x"+i)
-    state_variables[i] = state
-S = 0
-for state in state_variables:
+            state = state & eval("~x"+index)
     S = S | state
 global S
-
-
-
+S = S
+transitions = 0
+for arrow in arrows:
+    transition = 1
+    for index in variable_indexes:
+        if "x"+index in state_variables[arrows[0]]:
+            transition = transition & eval("x"+index)
+        else:
+            transition = transition & eval("~x"+index)
+        if "x"+index in state_variables[arrows[1]]:
+            transition = transition & eval("y"+index)
+        else:
+            transition = transition & eval("~y"+index)
+    transitions = transitions | transition
+global transitions
+transitions = transitions
 
 solution = SAT(formula)
 print("Estados que satisfazem a formula: ", solution)
