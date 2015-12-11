@@ -12,7 +12,7 @@ def pre_imagem_fraca(X):
     Y = expr2bdd(expr(str(bdd2expr(X)).replace("x", "y")))
     solution = Y & transitions
     variables = transitions.inputs
-    for variable in variables if str(variables)[0] == y:
+    for variable in variables if str(variables)[0] == "y":
         solution = solution.restrict({variable:1}) | solution.restrict({variable:0})
     return solution
 
@@ -43,8 +43,8 @@ def SAT(formula): #var. globais: S, transitions
     if formula.kind == "EF":    
         return SAT(CTLtree("EU(1)(" + str(formula.childs[0]) + ")")) 
     if formula.kind == "AU":
-        f1 = formula.childs[0]
-        f2 = formula.childs[1]
+        f1 = str(formula.childs[0])
+        f2 = str(formula.childs[1])
         return SAT(CTLtree("- +(EU(- "+f1+")(*(- "+f1+")(- "+f2+")))(- AF "+f2+")"))
     if formula.kind == "AG":
         return SAT(CTLtree("- EU(1)(- " + str(formula.childs[0]) + ")"))
@@ -75,18 +75,34 @@ def SAT_EU(formula1, formula2):
 
 sys.stdin.readline()
 transitions = eval(sys.stdin.readline())
-states = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
+
+state_variables = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
 variable_indexes = []
-for state in states:
-    for variable in state:
+for variable_list in state_variables:
+    for variable in variable_list:
         variable_indexes.append(int(variable.strip("x")))
 global variable_indexes
 variable_indexes = set(variable_indexes)
-    
 formula = CTLtree(sys.stdin.readline())
-k = states.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
+k = state_variables.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
+x = bddvars(x, len(variable_indexes))
+for i in range(len(state_variables)):
+    state = 1
+    for index in variable_indexes:
+        if "x"+i in state_variables[i]:
+            state = state & eval("x"+i)
+        else:
+            state = state & eval("-x"+i)
+    state_variables[i] = state
+S = 0
+for state in state_variables:
+    S = S | state
+global S
 
-solution = SAT(S, transitions, formula)
+
+
+
+solution = SAT(formula)
 print("Estados que satisfazem a formula: ", solution)
 if k in solution:
     print("O estado de interesse satisfaz a formula!")
