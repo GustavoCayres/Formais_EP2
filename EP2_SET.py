@@ -22,7 +22,7 @@ def pre_imagem_fraca(S, transitions, X):
     for arrow in transitions:
         if arrow[1] in X:
             pre_imagem_fraca.append(arrow[0])
-    return pre_imagem_fraca
+    return set(pre_imagem_fraca)
     
 def pre_imagem_forte(S, transitions, X):
     return set_subtraction(S, pre_imagem_fraca(S, transitions, set_subtraction(S, X)))
@@ -55,8 +55,8 @@ def SAT(S, transitions, formula):
     if formula.kind == "EF":    
         return SAT(S, transitions, CTLtree("EU(1)(" + str(formula.childs[0]) + ")")) 
     if formula.kind == "AU":
-        f1 = formula.childs[0]
-        f2 = formula.childs[1]
+        f1 = str(formula.childs[0])
+        f2 = str(formula.childs[1])
         return SAT(S, transitions, CTLtree("- +(EU(- "+f1+")(*(- "+f1+")(- "+f2+")))(- AF "+f2+")"))
     if formula.kind == "AG":
         return SAT(S, transitions, CTLtree("- EU(1)(- " + str(formula.childs[0]) + ")"))

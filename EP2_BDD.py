@@ -72,12 +72,17 @@ def SAT_EU(formula1, formula2):
         X = Y
         Y = Y | (W & pre_imagem_fraca(Y)) 
     return Y
-"""
-S = range(int(sys.stdin.readline()))
+
+sys.stdin.readline()
 transitions = eval(sys.stdin.readline())
-global states
 states = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
-#nao esta pronto! cada elemento deve ser um BDD
+variable_indexes = []
+for state in states:
+    for variable in state:
+        variable_indexes.append(int(variable.strip("x")))
+global variable_indexes
+variable_indexes = set(variable_indexes)
+    
 formula = CTLtree(sys.stdin.readline())
 k = states.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
 
@@ -87,4 +92,4 @@ if k in solution:
     print("O estado de interesse satisfaz a formula!")
 else:
     print("O estado de interesse NAO satisfaz a formula!")
-"""
+
