@@ -77,7 +77,8 @@ def SAT_EU(formula1, formula2):
 def SAT_states(states, solution):
     sat_states = []
     sol = solution
-    states[0]
+    for i in range(len(states)):
+        states[i]
     #descobrir como checar os estados, me sinto estupido =[ 
 
     return sat_states
@@ -101,7 +102,7 @@ y = bddvars(y, len(variable_indexes)) # x'
 S = 0
 states = []
 for i in range(len(state_variables)):
-    state = 1
+    state = 1 #AQUI NAO DEVERIA SER i?
     for index in variable_indexes:
         if "x"+index in state_variables[i]:
             state = state & eval("x"+index)
