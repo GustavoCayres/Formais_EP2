@@ -8,12 +8,13 @@ from pyeda.inter import *
 import sys
 from parser import CTLtree
 
-def pre_imagem_fraca(X):    
+def pre_imagem_fraca(X):
     Y = expr2bdd(expr(str(bdd2expr(X)).replace("x", "y")))
     solution = Y & transitions
     variables = transitions.inputs
-    for variable in variables if str(variables)[0] == "y":
-        solution = solution.restrict({variable:1}) | solution.restrict({variable:0})
+    for variable in variables:
+        if str(variables)[0] == "y":
+            solution = solution.restrict({variable:1}) | solution.restrict({variable:0})
     return solution
 
 def pre_imagem_forte(X):
@@ -38,10 +39,10 @@ def SAT(formula): #var. globais: S, transitions
         return SAT_AF(formula.childs[0])
     if formula.kind == "EU":
         return SAT_EU(formula.childs[0], formula.childs[1])
-    if formula.kind == "AX":    
+    if formula.kind == "AX":
         return SAT(CTLtree("- EX - " + str(formula.childs[0])))
-    if formula.kind == "EF":    
-        return SAT(CTLtree("EU(1)(" + str(formula.childs[0]) + ")")) 
+    if formula.kind == "EF":
+        return SAT(CTLtree("EU(1)(" + str(formula.childs[0]) + ")"))
     if formula.kind == "AU":
         f1 = str(formula.childs[0])
         f2 = str(formula.childs[1])
@@ -50,18 +51,18 @@ def SAT(formula): #var. globais: S, transitions
         return SAT(CTLtree("- EU(1)(- " + str(formula.childs[0]) + ")"))
     if formula.kind == "EG":
         return SAT(CTLtree("- AF - " + str(formula.childs[0])))
-   
+
 def SAT_EX(formula):
     X = SAT(formula)
     Y = pre_imagem_fraca(X)
     return Y
-                     
+
 def SAT_AF(formula):
     X = S
     Y = SAT(formula)
     while X != Y:
         X = Y
-        Y = Y | pre_imagem_forte(Y))
+        Y = Y | pre_imagem_forte(Y)
     return Y
 
 def SAT_EU(formula1, formula2):
@@ -70,8 +71,18 @@ def SAT_EU(formula1, formula2):
     Y = SAT(formula2)
     while X != Y:
         X = Y
-        Y = Y | (W & pre_imagem_fraca(Y)) 
+        Y = Y | (W & pre_imagem_fraca(Y))
     return Y
+
+def SAT_states(states, solution):
+    sat_states = []
+    sol = solution
+    states[0]
+    #descobrir como checar os estados, me sinto estupido =[ 
+
+    return sat_states
+
+
 
 sys.stdin.readline()
 arrows = eval(sys.stdin.readline())
@@ -88,6 +99,7 @@ k = state_variables.index(eval(sys.stdin.readline().replace("(", "[").replace(")
 x = bddvars(x, len(variable_indexes))
 y = bddvars(y, len(variable_indexes)) # x'
 S = 0
+states = []
 for i in range(len(state_variables)):
     state = 1
     for index in variable_indexes:
@@ -96,6 +108,7 @@ for i in range(len(state_variables)):
         else:
             state = state & eval("~x"+index)
     S = S | state
+    states.append(state)
 global S
 S = S
 transitions = 0
