@@ -79,9 +79,10 @@ def SAT_states(states, solution):
     sat_states = []
     sol = solution
     for i in range(len(states)):
+        print(states[i].satisfy_one())
+        print(sol.restrict(states[i].satisfy_one()))
         if sol.restrict(states[i].satisfy_one()) == 1:
             sat_states.append(states[i])
-    #descobrir como checar os estados, me sinto estupido =[ 
 
     return sat_states
 
