@@ -77,13 +77,9 @@ def SAT_EU(formula1, formula2):
 
 def SAT_states(states, solution):
     sat_states = []
-    sol = solution
     for i in range(len(states)):
-        print(states[i].satisfy_one())
-        print(sol.restrict(states[i].satisfy_one()))
-        if sol.restrict(states[i].satisfy_one()) == 1:
-            sat_states.append(states[i])
-
+        if solution.restrict(states[i].satisfy_one()):
+            sat_states.append(i)
     return sat_states
 
 sys.stdin.readline()
