@@ -26,7 +26,8 @@ def SAT(formula): #var. globais: S, transitions
     if formula.kind == "0":
         return 0
     if formula.kind[0] == "x":
-        return eval(formula.kind) & S.restrict({eval(formula.kind):1})
+        f = formula.kind.replace("x", "x[") + "]"
+        return eval(f) & S.restrict({eval(f):1})
     if formula.kind == "-":
         return S & ~(SAT(formula.childs[0]))
     if formula.kind == "*":
@@ -78,58 +79,56 @@ def SAT_states(states, solution):
     sat_states = []
     sol = solution
     for i in range(len(states)):
-        if sol.restrict(states[i].satisfy_one()) == 1
+        if sol.restrict(states[i].satisfy_one()) == 1:
             sat_states.append(states[i])
     #descobrir como checar os estados, me sinto estupido =[ 
 
     return sat_states
 
-
-
 sys.stdin.readline()
-arrows = eval(sys.stdin.readline())
-
+arrows = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
+global variable_indexes
 state_variables = eval(sys.stdin.readline().replace("(", "[").replace(")", "]"))
 variable_indexes = []
 for variable_list in state_variables:
     for variable in variable_list:
         variable_indexes.append(int(variable.strip("x")))
-global variable_indexes
 variable_indexes = set(variable_indexes)
 formula = CTLtree(sys.stdin.readline())
 k = state_variables.index(eval(sys.stdin.readline().replace("(", "[").replace(")", "]")))
-x = bddvars(x, len(variable_indexes))
-y = bddvars(y, len(variable_indexes)) # x'
+x = bddvars("x", len(variable_indexes)+1)
+y = bddvars("y", len(variable_indexes)+1) # x'
+global S
 S = 0
 states = []
 for i in range(len(state_variables)):
-    state = 1 #AQUI NAO DEVERIA SER i?
+    state = 1
     for index in variable_indexes:
-        if "x"+index in state_variables[i]:
-            state = state & eval("x"+index)
+        var = "x["+str(index)+"]"
+        if "x" + str(index) in state_variables[i]:
+            state = state & eval(var)
         else:
-            state = state & eval("~x"+index)
+            state = state & eval("~"+var)
     S = S | state
     states.append(state)
-global S
-S = S
+global transitions
 transitions = 0
 for arrow in arrows:
     transition = 1
     for index in variable_indexes:
-        if "x"+index in state_variables[arrows[0]]:
-            transition = transition & eval("x"+index)
+        var = "x["+str(index)+"]"
+        if "x"+str(index) in state_variables[arrow[0]]:
+            transition = transition & eval(var)
         else:
-            transition = transition & eval("~x"+index)
-        if "x"+index in state_variables[arrows[1]]:
-            transition = transition & eval("y"+index)
+            transition = transition & eval("~"+var)
+        future_var = "y["+str(index)+"]"
+        if "x"+str(index) in state_variables[arrow[1]]:
+            transition = transition & eval(future_var)
         else:
-            transition = transition & eval("~y"+index)
+            transition = transition & eval("~"+future_var)
     transitions = transitions | transition
-global transitions
-transitions = transitions
 
-solution = SAT(formula)
+solution = SAT_states(states, SAT(formula))
 print("Estados que satisfazem a formula: ", solution)
 if k in solution:
     print("O estado de interesse satisfaz a formula!")
