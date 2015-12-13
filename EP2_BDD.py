@@ -13,7 +13,7 @@ def pre_imagem_fraca(X):
     solution = Y & transitions
     variables = transitions.inputs
     for variable in variables:
-        if str(variables)[0] == "y":
+        if str(variable)[0] == "y":
             solution = solution.restrict({variable:1}) | solution.restrict({variable:0})
     return solution
 
@@ -47,7 +47,7 @@ def SAT(formula): #var. globais: S, transitions
     if formula.kind == "AU":
         f1 = str(formula.childs[0])
         f2 = str(formula.childs[1])
-        return SAT(CTLtree("- +(EU(- "+f1+")(*(- "+f1+")(- "+f2+")))(- AF "+f2+")"))
+        return SAT(CTLtree("- +(EG -"+f2+")(EU(-"+f2+")(*(-"+f1+")(-"+f2+")))"))
     if formula.kind == "AG":
         return SAT(CTLtree("- EU(1)(- " + str(formula.childs[0]) + ")"))
     if formula.kind == "EG":
